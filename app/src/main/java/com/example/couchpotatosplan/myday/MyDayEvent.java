@@ -1,30 +1,23 @@
 package com.example.couchpotatosplan.myday;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
+@IgnoreExtraProperties
 public class MyDayEvent {
-    public static ArrayList<MyDayEvent> eventsList = new ArrayList<>();
+    private String date;
+    private int time;
+    private String content;
 
-    public static ArrayList<MyDayEvent> eventsForDate()
-    {
-        ArrayList<MyDayEvent> events = new ArrayList<>();
+    public MyDayEvent() {
 
-        for(MyDayEvent event : eventsList)
-        {
-            events.add(event);
-        }
-
-        return events;
     }
 
-
-    private String content;
-    private int time;
-
-    public MyDayEvent(int time, String content)
+    public MyDayEvent(String date, int time, String content)
     {
+        this.date = date;
         this.time = time;
         this.content = content;
     }
@@ -47,5 +40,13 @@ public class MyDayEvent {
     public void setTime(int time)
     {
         this.time = time;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

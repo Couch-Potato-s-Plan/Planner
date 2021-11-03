@@ -36,6 +36,7 @@ public class EventAdapter extends ArrayAdapter<Event> {
 
         String eventTitle = event.getName() +" "+ CalendarUtils.formattedTime(event.getTime());
         eventCellTV.setText(eventTitle);
+
         return convertView;
     }
 }

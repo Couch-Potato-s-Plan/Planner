@@ -13,5 +13,6 @@
     <color name="inside">#E2EAFF</color>
 
     <color name="gray">#808080</color>
+    <color name="list_divider_color">#989898</color>
 
 </resources>
