@@ -1,7 +1,6 @@
-package com.example.couchpotatosplan.myday;
+package com.example.couchpotatosplan.weekly;
 
 import android.content.Context;
-import android.text.BoringLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,11 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.couchpotatosplan.R;
+import com.example.couchpotatosplan.myday.MyDayEvent;
 
 import java.util.List;
 
-public class MyDayEventAdapter extends ArrayAdapter<MyDayEvent> {
-    public MyDayEventAdapter(@NonNull Context context, List<MyDayEvent> events)
+public class WeeklyEventAdapter extends ArrayAdapter<MyDayEvent> {
+    public WeeklyEventAdapter(@NonNull Context context, List<MyDayEvent> events)
     {
         super(context, 0, events);
     }
@@ -29,7 +29,7 @@ public class MyDayEventAdapter extends ArrayAdapter<MyDayEvent> {
         MyDayEvent event = getItem(position);
 
         if (view == null)
-            view = LayoutInflater.from(getContext()).inflate(R.layout.myday_event_cell, parent, false);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.event_cell, parent, false);
 
         TextView time_tv = view.findViewById(R.id.time_tv);
         TextView content_tv = view.findViewById(R.id.content_tv);
@@ -39,21 +39,12 @@ public class MyDayEventAdapter extends ArrayAdapter<MyDayEvent> {
         String content = event.getContent();
         Boolean check = event.getCheck();
 
-//        checkBox.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                if(check == true) {
-//                    checkBox.setChecked(false);
-//                } else{
-//                    checkBox.setChecked(true);
-//                }
-//            }
-//        });
-
         time_tv.setText(time);
         content_tv.setText(content);
         checkBox.setChecked(check);
 
         return view;
     }
+
+
 }
