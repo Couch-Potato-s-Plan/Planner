@@ -34,7 +34,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-
+//설정화면
 public class SettingFragment extends Fragment {
 
     @Override
