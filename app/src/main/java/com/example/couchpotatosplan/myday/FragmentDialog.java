@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -94,8 +95,10 @@ public class FragmentDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 String eventName = eventNameET.getText().toString();
+                boolean checked = false;
+
                 if(!eventName.equals("")) {
-                    writeNewEvent(formattedDate(LocalDate.now()), RandomNum(), eventName);
+                    writeNewEvent(formattedDate(LocalDate.now()), RandomNum(), eventName, checked);
                 } else {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 }
@@ -104,15 +107,14 @@ public class FragmentDialog extends DialogFragment {
         });
     }
 
-    public void writeNewEvent(String date, int time, String content) {
-        MyDayEvent event = new MyDayEvent(date, time, content);
+    public void writeNewEvent(String date, int time, String content, Boolean check) {
+        MyDayEvent event = new MyDayEvent(date, time, content, check);
         mDatabase.child("event").child(String.valueOf(postNum+1)).setValue(event);
     }
 
     public int RandomNum() {
         Random random = new Random();
         int time = random.nextInt(24) + 1;
-
         return time;
     }
 

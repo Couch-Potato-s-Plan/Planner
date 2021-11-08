@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class MyDayFragment extends Fragment {
     private ListView eventListView;
     private MyDayEventAdapter adapter;
     private ImageButton add_btn;
+//    private CheckBox check;
 
     private FragmentDialog dialog;
 
@@ -42,13 +44,14 @@ public class MyDayFragment extends Fragment {
 
         TextView mTextView = view.findViewById(R.id.todayDate);
         add_btn = (ImageButton) view.findViewById(R.id.add_btn);
+//        check = (CheckBox)view.findViewById(R.id.checkBox);
 
         mFormat = new SimpleDateFormat("yyyy.MM.dd");
 
         initWidgets(view);
         mTextView.setText(getTime());
         addEventAction();
-
+//        isCheck();
         setEventAdpater();
 
         return view;
@@ -90,4 +93,14 @@ public class MyDayFragment extends Fragment {
         content_tv = (TextView) view.findViewById(R.id.content_tv);
         eventListView = view.findViewById(R.id.eventListView);
     }
+
+//    private void isCheck() {
+//        ArrayList<MyDayEvent> checking = MyDayEventList.eventsForCheck()
+//        check.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if()
+//            }
+//        });
+//    }
 }

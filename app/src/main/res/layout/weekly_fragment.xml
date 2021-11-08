@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="THUR"
+            android:text="THU"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:textSize="14sp" />

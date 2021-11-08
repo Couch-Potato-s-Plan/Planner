@@ -10,16 +10,18 @@ public class MyDayEvent {
     private String date;
     private int time;
     private String content;
+    private Boolean check;
 
     public MyDayEvent() {
 
     }
 
-    public MyDayEvent(String date, int time, String content)
+    public MyDayEvent(String date, int time, String content, Boolean check)
     {
         this.date = date;
         this.time = time;
         this.content = content;
+        this.check = check;
     }
 
     public String getContent()
@@ -48,5 +50,13 @@ public class MyDayEvent {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Boolean getCheck() {
+        return check;
+    }
+
+    public void setCheck(Boolean check) {
+        this.check = check;
     }
 }

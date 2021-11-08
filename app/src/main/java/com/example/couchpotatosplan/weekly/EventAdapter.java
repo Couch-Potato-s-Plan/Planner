@@ -22,7 +22,6 @@ public class EventAdapter extends ArrayAdapter<Event> {
         super(context, 0, events);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)

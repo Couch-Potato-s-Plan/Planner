@@ -12,9 +12,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -43,14 +45,30 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
     private DatabaseReference mDatabase;
     private WeeklyEventAdapter adapter;
     private long postNum;
+//    private CheckBox checkBox;
 
     Button previous_btn;
     Button next_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.weekly_fragment, container, false);
+
+        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
+        monthYearText = view.findViewById(R.id.monthYearTV);
+        monthDayText = view.findViewById(R.id.monthDayTV);
+        eventListView = view.findViewById(R.id.eventListView);
+//        checkBox = view
+
+        CalendarUtils.selectedDate = LocalDate.now();
+
+        monthYearText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog = new DatePickerDialog(getContext(), R.style.MyDatePickerStyle, listener, CalendarUtils.selectedDate.getYear(), CalendarUtils.selectedDate.getMonth().getValue() - 1, CalendarUtils.selectedDate.getDayOfMonth());
+                dialog.show();
+            }
+        });
 
         // Write a message to the database
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -67,49 +85,31 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
                         MyDayEventList.eventsList.add(post);
                     }
                 }
+                ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(CalendarUtils.selectedDate));
+                adapter = new WeeklyEventAdapter(view.getContext(), dailyEvents);
+                eventListView.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
         });
 
-
         previous_btn = (Button)view.findViewById(R.id.previous_btn);
         next_btn = (Button)view.findViewById(R.id.next_btn);
 
         previousWeekAction();
         nextWeekAction();
-
-        CalendarUtils.selectedDate = LocalDate.now();
-        initWidgets(view);
         setWeekView();
 
         return view;
     }
 
-    private void initWidgets(View view)
-    {
-        calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
-        monthYearText = view.findViewById(R.id.monthYearTV);
-        monthDayText = view.findViewById(R.id.monthDayTV);
-        eventListView = view.findViewById(R.id.eventListView);
-
-        monthYearText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog = new DatePickerDialog(getContext(), R.style.MyDatePickerStyle, listener, CalendarUtils.selectedDate.getYear(), CalendarUtils.selectedDate.getMonth().getValue(), CalendarUtils.selectedDate.getDayOfMonth());
-                dialog.show();
-            }
-        });
-    }
-
     private DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            CalendarUtils.selectedDate = LocalDate.of(year, month, dayOfMonth);
+            CalendarUtils.selectedDate = LocalDate.of(year, month + 1, dayOfMonth);
             setWeekView();
         }
     };
