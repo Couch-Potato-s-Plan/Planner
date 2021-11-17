@@ -30,6 +30,9 @@ public class MyDayFragment extends Fragment {
     private MyDayEventAdapter adapter;
     private ImageButton add_btn;
 
+    private TextView time_tv;
+    private TextView content_tv;
+
     private FragmentDialog dialog;
 
     @Override
@@ -39,9 +42,13 @@ public class MyDayFragment extends Fragment {
 
         TextView mTextView = view.findViewById(R.id.todayDate);
         add_btn = (ImageButton) view.findViewById(R.id.add_btn);
+
+        time_tv = (TextView) view.findViewById(R.id.time_tv);
+        content_tv = (TextView) view.findViewById(R.id.content_tv);
         eventListView = view.findViewById(R.id.eventListView);
 
         mFormat = new SimpleDateFormat("yyyy.MM.dd");
+
 
         mTextView.setText(getTime());
         addEventAction();
@@ -80,4 +87,6 @@ public class MyDayFragment extends Fragment {
         adapter = new MyDayEventAdapter(getActivity().getApplicationContext(), dailyEvents);
         eventListView.setAdapter(adapter);
     }
+
+
 }

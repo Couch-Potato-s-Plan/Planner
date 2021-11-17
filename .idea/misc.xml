@@ -3,8 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/drawable/custom_checkbox.xml" value="0.26979166666666665" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/drawable/ic_baseline_chevron_left_24.xml" value="0.26979166666666665" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/activity_main.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/calendar_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/event_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/exclude_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/exclude_dialog.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/month_exclude.xml" value="0.13072916666666667" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/month_fix.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/month_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/monthfragment_excluded.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/monthfragment_fix.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/myday_event_cell.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/myday_fragment.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/setting_fragment.xml" value="0.25364583333333335" />
+        <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/splash_activity.xml" value="0.25" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/layout/test_dialog.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Administrator/AndroidStudioProjects/CouchPotatosPlan2/CouchPotatosPlan/app/src/main/res/menu/bottom_nav.xml" value="0.25364583333333335" />
         <entry key="..\:/Users/Kim/AndroidStudioProjects/CouchPotatosPlan/CouchPotatosPlan/app/src/main/res/drawable-v24/ic_baseline_view_week_24.xml" value="0.26979166666666665" />

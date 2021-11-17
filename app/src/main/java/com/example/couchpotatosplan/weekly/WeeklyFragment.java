@@ -5,6 +5,7 @@ import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthDayFromDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthYearFromDate;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,13 +96,14 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
             }
         });
 
-        //setting fragment 테마 부분
         mDatabase.child("theme_num").addListenerForSingleValueEvent(new ValueEventListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
                     int theme_num = snapshot.getValue(Integer.class);
                     MainActivity.changeTheme(theme_num);
+
                 }
             }
 

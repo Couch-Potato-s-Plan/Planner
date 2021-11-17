@@ -50,6 +50,8 @@ public class SettingFragment extends Fragment {
     private int min = LocalTime.now().getMinute();
     private boolean isAlarmSet = false;
     private DatabaseReference database;
+    private View splash_xml;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class SettingFragment extends Fragment {
         alarm_switch = view.findViewById(R.id.alarm_switch);
         custom_btn = view.findViewById(R.id.custom_btn);
         database = FirebaseDatabase.getInstance().getReference();
+        splash_xml = view.findViewById(R.id.view2);
 
         addEventAction();
 
@@ -93,6 +96,8 @@ public class SettingFragment extends Fragment {
                 dlg.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+                       //내비게이션바 색상 변경
                         MainActivity.changeTheme(theme_num);
                         database.child("theme_num").setValue(theme_num);
                         addEventAction();
