@@ -1,39 +1,62 @@
 package com.example.couchpotatosplan.myday;
 
+import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
+
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.example.couchpotatosplan.R;
-import com.example.couchpotatosplan.weekly.CalendarUtils;
-import com.example.couchpotatosplan.weekly.Event;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.util.Random;
 
 public class FragmentDialog extends DialogFragment {
 
     private EditText eventNameET;
-    private LocalTime time;
     private Button save_btn;
+    private DatabaseReference mDatabase;
+    private long postNum;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
+        // Write a message to the database
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                    postNum = (snapshot.child("event").getChildrenCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         View view = inflater.inflate(R.layout.test_dialog, container, false);
         save_btn = (Button) view.findViewById(R.id.save_btn);
-        time = LocalTime.now();
 
         initWidgets(view);
         saveEventAction(view);
@@ -46,23 +69,60 @@ public class FragmentDialog extends DialogFragment {
         eventNameET = view.findViewById(R.id.eventNameET);
     }
 
-    public void saveEventAction(View view)
+    public void saveEventAction(View view)  //일정 입력 부분
     {
         save_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String eventName = eventNameET.getText().toString();
-                MyDayEvent newEvent = new MyDayEvent(RandomNum(), eventName);
-                MyDayEvent.eventsList.add(newEvent);
+                String eventName = eventNameET.getText().toString(); // 같은 일정 추가 불가
+
+                if(!eventName.equals("")) {
+
+                    if(MyDayEventList.isTimeTableFooled()) {
+                        dismiss();
+                        return; // 시간표가 꽉차면 종료
+                    }
+
+                    int startTime = 0;
+                    boolean ok = true;
+                    if(!MyDayEventList.eventsList.isEmpty()) { //비어있지 않으면 검사후 적용
+                        while (ok) {
+                            ok = false;
+                            startTime = RandomNum();
+                            for (MyDayEvent e : MyDayEventList.eventsList) {
+                                if (e.isPiled(startTime)) { ok = true; }
+                            }
+                        }
+                    }
+                    else // 비어있으면 바로 적용
+                    {
+                        startTime = RandomNum();
+                    }
+                    writeNewEvent(formattedDate(LocalDate.now()), startTime, eventName, false);
+                } else {
+                    Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
+                }
                 dismiss();
             }
         });
     }
 
-    public int RandomNum() {
+    public void writeNewEvent(String date, int time, String content, boolean checked) {
+        MyDayEvent event = new MyDayEvent(postNum+1, date, time, content, checked);
+        MyDayEventList.eventsList.add(event);
+        mDatabase.child("event").child(String.valueOf(postNum+1)).setValue(event);
+    }
+
+    public static int RandomNum() {
         Random random = new Random();
-        int time = random.nextInt(20) + 1;
+        int time = random.nextInt(24) + 1;
 
         return time;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_frame, new MyDayFragment()).commit();
     }
 }
