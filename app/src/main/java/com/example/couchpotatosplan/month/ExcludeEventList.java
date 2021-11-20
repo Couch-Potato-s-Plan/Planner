@@ -9,7 +9,6 @@ public class ExcludeEventList {
     {
         ArrayList<ExcludeEvent> events = new ArrayList<>();
 
-
         for(ExcludeEvent event : eventsList)
         {
             events.add(event);

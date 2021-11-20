@@ -107,6 +107,7 @@ public class ExcludeDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 String eventName = eventNameET.getText().toString();
+                dismiss();
                 if(eventName.equals("")) {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 } else if(start_time_hour == 0) {
@@ -116,7 +117,6 @@ public class ExcludeDialog extends DialogFragment {
                 } else {
                     writeNewEvent(start_time_hour, start_time_min, end_time_hour, end_time_min, eventName);
                 }
-                dismiss();
             }
         });
         cancel_btn.setOnClickListener(new View.OnClickListener() {

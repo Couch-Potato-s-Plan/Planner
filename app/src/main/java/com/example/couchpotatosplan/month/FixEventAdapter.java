@@ -41,13 +41,25 @@ public class FixEventAdapter extends ArrayAdapter<FixEvent> {
 
         String start;
         if(event.getStart_hour() < 10) //00:00
-            start = "0"+ event.getStart_hour() + ":" + event.getStart_min();
+            if(event.getStart_min() < 10)
+                start = "0"+ event.getStart_hour() + ":0" + event.getStart_min();
+            else
+                start = "0"+ event.getStart_hour() + ":" + event.getStart_min();
         else //12:00
-            start = event.getStart_hour() + ":" + event.getStart_min();
+            if(event.getStart_min() < 10)
+                start = event.getStart_hour() + ":0" + event.getStart_min();
+            else
+                start = event.getStart_hour() + ":" + event.getStart_min();
 
         String end;
         if(event.getEnd_hour() < 10)
-            end = "0"+ event.getEnd_hour() + ":" + event.getEnd_min();
+            if(event.getEnd_min() < 10)
+                end = "0"+ event.getEnd_hour() + ":0" + event.getEnd_min();
+            else
+                end = "0"+ event.getEnd_hour() + ":" + event.getEnd_min();
+        else
+        if(event.getEnd_min() < 10)
+            end = event.getEnd_hour() + ":0" + event.getEnd_min();
         else
             end = event.getEnd_hour() + ":" + event.getEnd_min();
 

@@ -29,7 +29,9 @@ import java.util.Random;
 public class FragmentDialog extends DialogFragment {
 
     private EditText eventNameET;
+    private EditText DateET;
     private Button save_btn;
+    private Button cancel_btn;
     private DatabaseReference mDatabase;
     private long postNum;
 
@@ -56,6 +58,7 @@ public class FragmentDialog extends DialogFragment {
 
         View view = inflater.inflate(R.layout.test_dialog, container, false);
         save_btn = (Button) view.findViewById(R.id.save_btn);
+        cancel_btn = (Button) view.findViewById(R.id.cancel_btn);
 
         initWidgets(view);
         saveEventAction(view);
@@ -66,6 +69,7 @@ public class FragmentDialog extends DialogFragment {
     private void initWidgets(View view)
     {
         eventNameET = view.findViewById(R.id.eventNameET);
+        DateET = view.findViewById(R.id.DateET);
     }
 
     public void saveEventAction(View view)
@@ -74,15 +78,24 @@ public class FragmentDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 String eventName = eventNameET.getText().toString();
+                String Date = DateET.getText().toString();
                 if(!eventName.equals("")) {
-                    writeNewEvent(formattedDate(LocalDate.now()), RandomNum(), eventName, false);
+                    writeNewEvent(Date, RandomNum(), eventName, false);
+                    //writeNewEvent(formattedDate(LocalDate.now()), RandomNum(), eventName, false);
                 } else {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 }
                 dismiss();
             }
         });
+        cancel_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
     }
+
 
     public void writeNewEvent(String date, int time, String content, boolean checked) {
         MyDayEvent event = new MyDayEvent(postNum+1, date, time, content, checked);
