@@ -61,7 +61,10 @@ public class MonthExcludeFragment extends Fragment {
     public void setEventAdpater()
     {
         ArrayList<ExcludeEvent> dailyEvents = ExcludeEventList.eventsList;
-        adapter = new ExcludeEventAdapter(getActivity().getApplicationContext(), dailyEvents);
-        eventListView.setAdapter(adapter);
+        if(getActivity() != null) {
+            adapter = new ExcludeEventAdapter(getActivity().getApplicationContext(), dailyEvents);
+            eventListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

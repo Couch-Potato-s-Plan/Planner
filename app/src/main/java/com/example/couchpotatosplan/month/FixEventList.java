@@ -1,5 +1,7 @@
 package com.example.couchpotatosplan.month;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class FixEventList {

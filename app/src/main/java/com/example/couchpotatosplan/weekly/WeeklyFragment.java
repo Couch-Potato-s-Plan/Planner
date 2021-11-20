@@ -26,6 +26,8 @@ import com.example.couchpotatosplan.MainActivity;
 import com.example.couchpotatosplan.R;
 import com.example.couchpotatosplan.month.ExcludeEvent;
 import com.example.couchpotatosplan.month.ExcludeEventList;
+import com.example.couchpotatosplan.month.FixEvent;
+import com.example.couchpotatosplan.month.FixEventList;
 import com.example.couchpotatosplan.myday.MyDayEventList;
 import com.example.couchpotatosplan.myday.MyDayEvent;
 import com.google.firebase.database.DataSnapshot;
@@ -46,7 +48,8 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
     private DatabaseReference mDatabase;
     private WeeklyEventAdapter weeklyEventAdapter;
     public long postNumOfWeekly;
-    public long postNumOfMonth;
+    public long postNumOfExclude;
+    public long postNumOfFix;
 
     Button previous_btn;
     Button next_btn;
@@ -78,9 +81,11 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 MyDayEventList.eventsList.clear();
                 ExcludeEventList.eventsList.clear();
+                FixEventList.fixeventsList.clear();
                 if (snapshot.exists()) {
                     postNumOfWeekly = (snapshot.child("event").getChildrenCount());
-                    postNumOfMonth = (snapshot.child("exclude").getChildrenCount());
+                    postNumOfExclude = (snapshot.child("exclude").getChildrenCount());
+                    postNumOfFix = (snapshot.child("fix").getChildrenCount());
                     String theme_num = snapshot.child("theme").getValue().toString();
                     MainActivity.changeTheme(theme_num);
                 }
@@ -91,6 +96,10 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
                 for (DataSnapshot dataSnapshot : snapshot.child("exclude").getChildren()) {
                     ExcludeEvent post = dataSnapshot.getValue(ExcludeEvent.class);
                     ExcludeEventList.eventsList.add(post);
+                }
+                for (DataSnapshot dataSnapshot : snapshot.child("fix").getChildren()) {
+                    FixEvent post = dataSnapshot.getValue(FixEvent.class);
+                    FixEventList.fixeventsList.add(post);
                 }
                 ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(CalendarUtils.selectedDate));
                 weeklyEventAdapter = new WeeklyEventAdapter(view.getContext(), dailyEvents);
