@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.couchpotatosplan.R;
+import com.example.couchpotatosplan.myday.MyDayEventAdapter;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class MonthFixFragment extends Fragment {
         View view = inflater.inflate(R.layout.month_fix_fragment, container, false);
 
         add_btn = view.findViewById((R.id.add_btn));
-        eventListView = view.findViewById((R.id.monthEventListView));
+        eventListView = view.findViewById((R.id.fixEventListView));
         back_btn = view.findViewById((R.id.back_btn));
 
         back_btn.setOnClickListener(new View.OnClickListener() {
@@ -51,10 +52,12 @@ public class MonthFixFragment extends Fragment {
         return view;
     }
 
-    public void setEventAdpater()
-    {
-        ArrayList<FixEvent> dailyEvents = FixEventList.eventsList;
-        adapter = new FixEventAdapter(getActivity().getApplicationContext(), dailyEvents);
-        eventListView.setAdapter(adapter);
+    public void setEventAdpater() {
+        ArrayList<FixEvent> dailyEvents = FixEventList.fixeventsList;
+        if (getActivity() != null) {
+            adapter = new FixEventAdapter(getActivity().getApplicationContext(), dailyEvents);
+            eventListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 }

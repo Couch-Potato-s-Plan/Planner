@@ -75,9 +75,9 @@ public class FixDialog extends DialogFragment {
 
     private void initWidgets(View view)
     {
-        eventNameET = view.findViewById(R.id.eventNameET);
-        start_tv = view.findViewById(R.id.starttime);
-        end_tv = view.findViewById(R.id.endtime);
+        eventNameET = view.findViewById(R.id.fix_eventNameET);
+        start_tv = view.findViewById(R.id.fix_starttime);
+        end_tv = view.findViewById(R.id.fix_endtime);
     }
 
     public void EventAction(View view)

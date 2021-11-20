@@ -34,8 +34,8 @@ public class FixEventAdapter extends ArrayAdapter<FixEvent> {
             view = LayoutInflater.from(getContext()).inflate(R.layout.month_fix_cell, parent, false);
 
         fixCon = view.findViewById(R.id.fixContent);
-        start_tv = view.findViewById(R.id.time_start);
-        end_tv = view.findViewById(R.id.time_end);
+        start_tv = view.findViewById(R.id.fix_time_start);
+        end_tv = view.findViewById(R.id.fix_time_end);
 
         String content = event.getContent();
 

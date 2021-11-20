@@ -99,8 +99,10 @@ public class MyDayFragment extends Fragment {
     public void setEventAdpater()
     {
         ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(LocalDate.now()));
-        adapter = new MyDayEventAdapter(getActivity().getApplicationContext(), dailyEvents);
-        eventListView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        if(getActivity() != null) {
+            adapter = new MyDayEventAdapter(getActivity().getApplicationContext(), dailyEvents);
+            eventListView.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+        }
     }
 }
