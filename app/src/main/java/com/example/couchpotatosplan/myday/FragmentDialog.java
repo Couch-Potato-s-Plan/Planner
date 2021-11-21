@@ -94,7 +94,6 @@ public class FragmentDialog extends DialogFragment {
                         dismiss();
                         return; // 시간표가 꽉차면 종료
                     }
-
                     int startTime = 0;
                     boolean ok = true;
                     if(!MyDayEventList.eventsList.isEmpty()) { //비어있지 않으면 검사후 적용
