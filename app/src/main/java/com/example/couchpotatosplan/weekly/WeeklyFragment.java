@@ -5,7 +5,9 @@ import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthDayFromDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthYearFromDate;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,13 +52,14 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
     public long postNumOfWeekly;
     public long postNumOfExclude;
     public long postNumOfFix;
+    private View view;
 
     Button previous_btn;
     Button next_btn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.weekly_fragment, container, false);
+        view = inflater.inflate(R.layout.weekly_fragment, container, false);
 
         calendarRecyclerView = view.findViewById(R.id.calendarRecyclerView);
         monthYearText = view.findViewById(R.id.monthYearTV);
@@ -182,4 +185,5 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
         weeklyEventAdapter = new WeeklyEventAdapter(getActivity().getApplicationContext(), dailyEvents);
         weeklyEventListView.setAdapter(weeklyEventAdapter);
     }
+
 }
