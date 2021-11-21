@@ -61,7 +61,7 @@ public class SettingFragment extends Fragment {
     private int hour = LocalTime.now().getHour();
     private int min = LocalTime.now().getMinute();
     private boolean isAlarmSet = false;
-
+    private View bar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +73,7 @@ public class SettingFragment extends Fragment {
         alarm_switch = view.findViewById(R.id.alarm_switch);
         custom_btn = view.findViewById(R.id.custom_btn);
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        bar = view.findViewById(R.id.view4);
 
         onclick();
         addEventAction();
@@ -87,6 +88,28 @@ public class SettingFragment extends Fragment {
 
                 if (snapshot.exists()) {
                     theme_num = snapshot.child("theme").getValue().toString();
+
+                    int theme = Integer.parseInt(theme_num);
+                    switch (theme) {
+                        case 0:
+                            bar.setBackgroundColor(Color.rgb(143, 186, 216));
+                            break;
+                        case 1:
+                            bar.setBackgroundColor(Color.rgb(255, 211, 26));
+                            break;
+                        case 2:
+                            bar.setBackgroundColor(Color.rgb(234, 102, 118));
+                            break;
+                        case 3:
+                            bar.setBackgroundColor(Color.rgb(248, 213, 224));
+                            break;
+                        case 4:
+                            bar.setBackgroundColor(Color.rgb(102, 100, 139));
+                            break;
+                        case 5:
+                            bar.setBackgroundColor(Color.rgb(48, 52, 63));
+                            break;
+                    }
                 }
             }
             @Override

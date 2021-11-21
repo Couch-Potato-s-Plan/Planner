@@ -43,10 +43,6 @@ public class Alarm extends BroadcastReceiver {
         }
 
 
-//        ArrayList<MyDayEvent> dailyEvents = MyDayEventList.eventsForDate(formattedDate(LocalDate.now()));
-//        for(Object object : dailyEvents) {
-////            content += dailyEvents.toString();
-//        }
 
         createNotificationChannel(context, DEFAULT, "default channel", NotificationManager.IMPORTANCE_HIGH);
 
