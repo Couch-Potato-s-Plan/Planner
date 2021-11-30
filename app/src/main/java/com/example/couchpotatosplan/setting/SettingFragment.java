@@ -75,7 +75,7 @@ public class SettingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         bar = view.findViewById(R.id.view4);
 
-        onclick();
+
         addEventAction();
         return view;
     }
@@ -88,6 +88,7 @@ public class SettingFragment extends Fragment {
 
                 if (snapshot.exists()) {
                     theme_num = snapshot.child("theme").getValue().toString();
+                    on_click_alarm = (Boolean) snapshot.child("onAlarm").getValue();
 
                     int theme = Integer.parseInt(theme_num);
                     switch (theme) {
@@ -109,6 +110,25 @@ public class SettingFragment extends Fragment {
                         case 5:
                             bar.setBackgroundColor(Color.rgb(48, 52, 63));
                             break;
+                    }
+
+                    if (on_click_alarm) {
+                        alarm_switch.setChecked(true);
+                        custom_btn.setEnabled(true);
+                        custom_btn.setTextColor(Color.BLACK);
+                        on_click_alarm = true;
+                        mDatabase.child("onAlarm").setValue(true);
+                    } else {
+                        alarm_switch.setChecked(false);
+                        custom_btn.setEnabled(false);
+                        custom_btn.setTextColor(Color.GRAY);
+                        on_click_alarm = false;
+                        mDatabase.child("onAlarm").setValue(false);
+                        if(isAlarmSet) {
+                            destroyNotification();
+                            unregist();
+                        }
+                        isAlarmSet = false;
                     }
                 }
             }
@@ -179,10 +199,12 @@ public class SettingFragment extends Fragment {
                     custom_btn.setEnabled(true);
                     custom_btn.setTextColor(Color.BLACK);
                     on_click_alarm = true;
+                    mDatabase.child("onAlarm").setValue(true);
                 } else {
                     custom_btn.setEnabled(false);
                     custom_btn.setTextColor(Color.GRAY);
                     on_click_alarm = false;
+                    mDatabase.child("onAlarm").setValue(false);
                     if(isAlarmSet) {
                         destroyNotification();
                         unregist();
@@ -241,24 +263,5 @@ public class SettingFragment extends Fragment {
         notificationManager.cancel(1);
     }
 
-    void onclick(){
-        if(on_click_alarm == true){
-            alarm_switch.setChecked(true);
-            custom_btn.setEnabled(true);
-            custom_btn.setTextColor(Color.BLACK);
-            on_click_alarm = true;
-        }
-        else if(on_click_alarm == false){
-            alarm_switch.setChecked(false);
-            custom_btn.setEnabled(false);
-            custom_btn.setTextColor(Color.GRAY);
-            on_click_alarm = false;
-            if(isAlarmSet) {
-                destroyNotification();
-                unregist();
-            }
-            isAlarmSet = false;
-        }
-    }
 
 }
