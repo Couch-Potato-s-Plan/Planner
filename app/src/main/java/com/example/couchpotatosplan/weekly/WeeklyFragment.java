@@ -6,7 +6,11 @@ import static com.example.couchpotatosplan.weekly.CalendarUtils.monthDayFromDate
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthYearFromDate;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -32,6 +37,7 @@ import com.example.couchpotatosplan.month.FixEvent;
 import com.example.couchpotatosplan.month.FixEventList;
 import com.example.couchpotatosplan.myday.MyDayEventList;
 import com.example.couchpotatosplan.myday.MyDayEvent;
+import com.example.couchpotatosplan.setting.Alarm;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +46,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemListener {
     private TextView monthYearText;
@@ -53,6 +60,11 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
     public long postNumOfExclude;
     public long postNumOfFix;
     private View view;
+
+    private AlarmManager alarmManager;
+    boolean isAlarmSet;
+    int hour;
+    int min;
 
     Button previous_btn;
     Button next_btn;
@@ -91,6 +103,13 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
                     postNumOfFix = (snapshot.child("fix").getChildrenCount());
                     String theme_num = snapshot.child("theme").getValue().toString();
                     MainActivity.changeTheme(theme_num);
+
+                    isAlarmSet = (boolean) snapshot.child("alarm").child("onAlarm").getValue();
+                    hour = Integer.parseInt (snapshot.child("alarm").child("hour").getValue().toString());
+                    min = Integer.parseInt(snapshot.child("alarm").child("minute").getValue().toString());
+//                    if(isAlarmSet){
+//                        onAlarmSet();
+//                    }
                 }
                 for (DataSnapshot dataSnapshot : snapshot.child("event").getChildren()) {
                     MyDayEvent post = dataSnapshot.getValue(MyDayEvent.class);
@@ -185,5 +204,25 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
         weeklyEventAdapter = new WeeklyEventAdapter(getActivity().getApplicationContext(), dailyEvents);
         weeklyEventListView.setAdapter(weeklyEventAdapter);
     }
+/*
+    public void onAlarmSet() {
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        if(calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        Intent intent = new Intent(getActivity().getApplicationContext(), Alarm.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+*/
 }

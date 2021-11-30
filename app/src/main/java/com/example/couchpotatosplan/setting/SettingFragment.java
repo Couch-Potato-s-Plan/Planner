@@ -62,6 +62,7 @@ public class SettingFragment extends Fragment {
     private int min = LocalTime.now().getMinute();
     private boolean isAlarmSet = false;
     private View bar;
+    private Intent intent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +89,7 @@ public class SettingFragment extends Fragment {
 
                 if (snapshot.exists()) {
                     theme_num = snapshot.child("theme").getValue().toString();
-                    on_click_alarm = (Boolean) snapshot.child("onAlarm").getValue();
+                    on_click_alarm = (Boolean) snapshot.child("alarm").child("onAlarm").getValue();
 
                     int theme = Integer.parseInt(theme_num);
                     switch (theme) {
@@ -117,13 +118,13 @@ public class SettingFragment extends Fragment {
                         custom_btn.setEnabled(true);
                         custom_btn.setTextColor(Color.BLACK);
                         on_click_alarm = true;
-                        mDatabase.child("onAlarm").setValue(true);
+                        mDatabase.child("alarm").child("onAlarm").setValue(true);
                     } else {
                         alarm_switch.setChecked(false);
                         custom_btn.setEnabled(false);
                         custom_btn.setTextColor(Color.GRAY);
                         on_click_alarm = false;
-                        mDatabase.child("onAlarm").setValue(false);
+                        mDatabase.child("alarm").child("onAlarm").setValue(false);
                         if(isAlarmSet) {
                             destroyNotification();
                             unregist();
@@ -199,12 +200,12 @@ public class SettingFragment extends Fragment {
                     custom_btn.setEnabled(true);
                     custom_btn.setTextColor(Color.BLACK);
                     on_click_alarm = true;
-                    mDatabase.child("onAlarm").setValue(true);
+                    mDatabase.child("alarm").child("onAlarm").setValue(true);
                 } else {
                     custom_btn.setEnabled(false);
                     custom_btn.setTextColor(Color.GRAY);
                     on_click_alarm = false;
-                    mDatabase.child("onAlarm").setValue(false);
+                    mDatabase.child("alarm").child("onAlarm").setValue(false);
                     if(isAlarmSet) {
                         destroyNotification();
                         unregist();
@@ -233,6 +234,9 @@ public class SettingFragment extends Fragment {
             hour = hourOfDay;
             min = minute;
 
+            mDatabase.child("alarm").child("hour").setValue(Integer.toString(hour));
+            mDatabase.child("alarm").child("minute").setValue(Integer.toString(min));
+
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.set(Calendar.HOUR_OF_DAY, hour);
@@ -244,7 +248,7 @@ public class SettingFragment extends Fragment {
                 calendar.add(Calendar.DATE, 1);
             }
 
-            Intent intent = new Intent(getContext(), Alarm.class);
+            intent = new Intent(getContext(), Alarm.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
@@ -252,8 +256,9 @@ public class SettingFragment extends Fragment {
         }
     };
 
+
     public void unregist() {
-        Intent intent = new Intent(getContext(), Alarm.class);
+        intent = new Intent(getContext(), Alarm.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
         alarmManager.cancel(pendingIntent);
     }
