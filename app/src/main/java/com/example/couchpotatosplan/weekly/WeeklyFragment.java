@@ -5,9 +5,8 @@ import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthDayFromDate;
 import static com.example.couchpotatosplan.weekly.CalendarUtils.monthYearFromDate;
 
-import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -89,8 +88,10 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
                     postNumOfWeekly = (snapshot.child("event").getChildrenCount());
                     postNumOfExclude = (snapshot.child("exclude").getChildrenCount());
                     postNumOfFix = (snapshot.child("fix").getChildrenCount());
-                    String theme_num = snapshot.child("theme").getValue().toString();
-                    MainActivity.changeTheme(theme_num);
+                    if(snapshot.child("theme").getValue() != null) {
+                        String theme_num = snapshot.child("theme").getValue().toString();
+                        MainActivity.changeTheme(theme_num);
+                    }
                 }
                 for (DataSnapshot dataSnapshot : snapshot.child("event").getChildren()) {
                     MyDayEvent post = dataSnapshot.getValue(MyDayEvent.class);
@@ -185,5 +186,21 @@ public class WeeklyFragment extends Fragment implements CalendarAdapter.OnItemLi
         weeklyEventAdapter = new WeeklyEventAdapter(getActivity().getApplicationContext(), dailyEvents);
         weeklyEventListView.setAdapter(weeklyEventAdapter);
     }
-
+/*
+    public void onAlarmSet() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        if(calendar.before(Calendar.getInstance())) {
+            calendar.add(Calendar.DATE, 1);
+        }
+        Intent intent = new Intent(getActivity().getApplicationContext(), Alarm.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    }
+*/
 }

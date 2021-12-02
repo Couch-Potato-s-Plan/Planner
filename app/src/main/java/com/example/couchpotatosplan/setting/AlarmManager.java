@@ -1,7 +1,6 @@
 package com.example.couchpotatosplan.setting;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-
 import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
 
 import android.app.Notification;
@@ -23,7 +22,7 @@ import com.example.couchpotatosplan.myday.MyDayEventList;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Alarm extends BroadcastReceiver {
+public class AlarmManager extends BroadcastReceiver {
     private final String DEFAULT = "DEFAULT";
     private String title = "오늘의 할일";
     private String content = "";

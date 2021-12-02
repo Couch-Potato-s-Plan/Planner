@@ -2,8 +2,6 @@ package com.example.couchpotatosplan.setting;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-import static com.example.couchpotatosplan.weekly.CalendarUtils.formattedDate;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
@@ -21,20 +19,13 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TimePicker;
 import android.app.AlarmManager;
+import com.example.couchpotatosplan.utils.Alarm;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.couchpotatosplan.MainActivity;
 import com.example.couchpotatosplan.R;
-import com.example.couchpotatosplan.month.ExcludeEvent;
-import com.example.couchpotatosplan.month.ExcludeEventList;
-import com.example.couchpotatosplan.month.FixEvent;
-import com.example.couchpotatosplan.month.FixEventList;
-import com.example.couchpotatosplan.myday.MyDayEvent;
-import com.example.couchpotatosplan.myday.MyDayEventList;
-import com.example.couchpotatosplan.weekly.CalendarUtils;
-import com.example.couchpotatosplan.weekly.WeeklyEventAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,11 +33,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.Calendar;
 
-//주석
+
 //설정화면..
 public class SettingFragment extends Fragment {
 
@@ -54,14 +46,14 @@ public class SettingFragment extends Fragment {
     private BottomNavigationView bottomNavigation;
     private AlarmManager alarmManager;
     private Switch alarm_switch;
+    private Alarm alarm;
+    private TimePickerDialog dialog;
     private DatabaseReference mDatabase;
     private Button custom_btn;
-    private Boolean on_click_alarm = false;
     private String theme_num = "0";
-    private int hour = LocalTime.now().getHour();
-    private int min = LocalTime.now().getMinute();
     private boolean isAlarmSet = false;
     private View bar;
+    private Intent intent;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,7 +67,6 @@ public class SettingFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         bar = view.findViewById(R.id.view4);
 
-        onclick();
         addEventAction();
         return view;
     }
@@ -87,7 +78,50 @@ public class SettingFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.exists()) {
-                    theme_num = snapshot.child("theme").getValue().toString();
+                    if(snapshot.child("theme").getValue() != null) {
+                        theme_num = snapshot.child("theme").getValue().toString();
+                    }
+                    if(snapshot.child("alarm").getValue() != null) {
+                        alarm = snapshot.child("alarm").getValue(Alarm.class);
+                        if(alarm.isChecked()) {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTimeInMillis(System.currentTimeMillis());
+                            calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+                            calendar.set(Calendar.MINUTE, alarm.getMinute());
+                            calendar.set(Calendar.SECOND, 0);
+                            calendar.set(Calendar.MILLISECOND, 0);
+
+                            if(calendar.before(Calendar.getInstance())) {
+                                calendar.add(Calendar.DATE, 1);
+                            }
+
+                            intent = new Intent(getContext(), Alarm.class);
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                            alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+                            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+                        }
+                        if (alarm.isChecked()) {
+                            alarm_switch.setChecked(true);
+                            custom_btn.setEnabled(true);
+                            custom_btn.setTextColor(Color.BLACK);
+                            alarm.setChecked(true);
+                            mDatabase.child("alarm").setValue(alarm);
+                        } else {
+                            alarm_switch.setChecked(false);
+                            custom_btn.setEnabled(false);
+                            custom_btn.setTextColor(Color.GRAY);
+                            alarm.setChecked(false);
+                            mDatabase.child("alarm").setValue(alarm);
+                            if(isAlarmSet) {
+                                destroyNotification();
+                                unregist();
+                            }
+                            isAlarmSet = false;
+                        }
+                    } else {
+                        alarm = new Alarm(LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), false);
+                    }
 
                     int theme = Integer.parseInt(theme_num);
                     switch (theme) {
@@ -175,14 +209,16 @@ public class SettingFragment extends Fragment {
         alarm_switch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!on_click_alarm) {
+                if (!alarm.isChecked()) {
                     custom_btn.setEnabled(true);
                     custom_btn.setTextColor(Color.BLACK);
-                    on_click_alarm = true;
+                    alarm.setChecked(true);
+                    mDatabase.child("alarm").setValue(alarm);
                 } else {
                     custom_btn.setEnabled(false);
                     custom_btn.setTextColor(Color.GRAY);
-                    on_click_alarm = false;
+                    alarm.setChecked(false);
+                    mDatabase.child("alarm").setValue(alarm);
                     if(isAlarmSet) {
                         destroyNotification();
                         unregist();
@@ -195,7 +231,7 @@ public class SettingFragment extends Fragment {
         custom_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TimePickerDialog dialog = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, listener, hour, min, false);
+                dialog = new TimePickerDialog(getContext(), android.R.style.Theme_Holo_Light_Dialog_NoActionBar, listener, alarm.getHour(), alarm.getMinute(), false);
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 dialog.setTitle("알람 시간 설정");
                 dialog.show();
@@ -208,13 +244,14 @@ public class SettingFragment extends Fragment {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             isAlarmSet = true;
-            hour = hourOfDay;
-            min = minute;
+            alarm = new Alarm(hourOfDay, minute, alarm.isChecked());
+
+            mDatabase.child("alarm").setValue(alarm);
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.HOUR_OF_DAY, hour);
-            calendar.set(Calendar.MINUTE, min);
+            calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+            calendar.set(Calendar.MINUTE, alarm.getMinute());
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
 
@@ -222,7 +259,7 @@ public class SettingFragment extends Fragment {
                 calendar.add(Calendar.DATE, 1);
             }
 
-            Intent intent = new Intent(getContext(), Alarm.class);
+            intent = new Intent(getContext(), Alarm.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
@@ -230,8 +267,9 @@ public class SettingFragment extends Fragment {
         }
     };
 
+
     public void unregist() {
-        Intent intent = new Intent(getContext(), Alarm.class);
+        intent = new Intent(getContext(), Alarm.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
         alarmManager.cancel(pendingIntent);
     }
@@ -241,24 +279,5 @@ public class SettingFragment extends Fragment {
         notificationManager.cancel(1);
     }
 
-    void onclick(){
-        if(on_click_alarm == true){
-            alarm_switch.setChecked(true);
-            custom_btn.setEnabled(true);
-            custom_btn.setTextColor(Color.BLACK);
-            on_click_alarm = true;
-        }
-        else if(on_click_alarm == false){
-            alarm_switch.setChecked(false);
-            custom_btn.setEnabled(false);
-            custom_btn.setTextColor(Color.GRAY);
-            on_click_alarm = false;
-            if(isAlarmSet) {
-                destroyNotification();
-                unregist();
-            }
-            isAlarmSet = false;
-        }
-    }
 
 }

@@ -39,6 +39,7 @@ public class FragmentDialog extends DialogFragment {
     private EditText eventNameET;
     private EditText DateET;
     private Button save_btn;
+    private Button cacle_btn;
     private DatabaseReference mDatabase;
     private long postNum;
 
@@ -65,6 +66,7 @@ public class FragmentDialog extends DialogFragment {
 
         View view = inflater.inflate(R.layout.test_dialog, container, false);
         save_btn = (Button) view.findViewById(R.id.save_btn);
+        cacle_btn = (Button) view.findViewById(R.id.cancel_btn);
 
         initWidgets(view);
         saveEventAction(view);
@@ -142,6 +144,12 @@ public class FragmentDialog extends DialogFragment {
                 } else {
                     Toast.makeText(getContext(), "내용을 입력하세요", Toast.LENGTH_LONG).show();
                 }
+                dismiss();
+            }
+        });
+        cacle_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 dismiss();
             }
         });

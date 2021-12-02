@@ -21,7 +21,7 @@ public class MonthFragment extends Fragment {
     public TextView exclude_btn;
     public TextView fix_btn;
     private DatabaseReference mDatabase;
-    private String theme_num;
+    private String theme_num = "0";
     private View bar;
 
     @Override
@@ -39,7 +39,9 @@ public class MonthFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 if (snapshot.exists()) {
-                    theme_num = snapshot.child("theme").getValue().toString();
+                    if(snapshot.child("theme").getValue() != null) {
+                        theme_num = snapshot.child("theme").getValue().toString();
+                    }
                     int theme = Integer.parseInt(theme_num);
 
                     switch (theme) {
